@@ -1,6 +1,6 @@
 [build]
-  publish = "."
-  command = "echo 'Site estático pronto!'"
+  publish = "_site"
+  command = "bundle exec jekyll build"
 
 [[redirects]]
   from = "/admin/*"
@@ -8,4 +8,5 @@
   status = 200
 
 [build.environment]
+  RUBY_VERSION = "3.0.0"
   NODE_VERSION = "18"
