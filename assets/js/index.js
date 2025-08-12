@@ -1,395 +1,390 @@
-// Configuração da API do GitHub
-const GITHUB_USER = 'LukystarWar'; // ← MUDE AQUI
-const GITHUB_REPO = 'geovanafotografia'; // ← MUDE AQUI
-const GITHUB_BRANCH = 'main';
-
-// Função para buscar dados do CMS
-async function loadPortfolioData() {
-    try {
-        // Carrega configurações gerais
-        await loadSiteConfig();
-
-        // Carrega portfólio
-        await loadPortfolioItems();
-
-        // Carrega dados da página sobre
-        await loadAboutData();
-
-        // Carrega dados de contato
-        await loadContactData();
-
-        console.log('✅ Todos os dados carregados com sucesso!');
-    } catch (error) {
-        console.log('ℹ️ Usando dados padrão - CMS ainda não configurado');
-    }
-}
-
-// Carrega configurações gerais do site
-async function loadSiteConfig() {
-    try {
-        const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/_data/config.yml`);
-        if (response.ok) {
-            const content = await response.text();
-            const config = parseYAML(content);
-
-            // Atualiza título do site
-            if (config.site_title) {
-                document.querySelector('.logo h1').textContent = config.site_title;
-            }
-
-            // Atualiza slogan
-            if (config.tagline) {
-                document.querySelector('.logo p').textContent = config.tagline;
-            }
-
-            // Atualiza hero
-            if (config.hero_image) {
-                document.querySelector('.hero').style.backgroundImage =
-                    `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${config.hero_image}')`;
-            }
-
-            if (config.hero_text) {
-                document.querySelector('.hero-content p').textContent = config.hero_text;
-            }
-        }
-    } catch (error) {
-        console.log('Config padrão mantido');
-    }
-}
-
-// Carrega itens do portfólio
-async function loadPortfolioItems() {
-    try {
-        // Busca lista de arquivos na pasta _portfolio
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/_portfolio`);
-
-        if (!response.ok) throw new Error('Pasta _portfolio não encontrada');
-
-        const files = await response.json();
-        const portfolioItems = [];
-
-        // Carrega cada arquivo
-        for (const file of files) {
-            if (file.name.endsWith('.md')) {
-                const fileResponse = await fetch(file.download_url);
-                const content = await fileResponse.text();
-                const item = parseMarkdownWithFrontmatter(content);
-                portfolioItems.push(item);
-            }
-        }
-
-        // Ordena por data (mais recente primeiro)
-        portfolioItems.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        // Atualiza a galeria
-        updateGalleryGrid(portfolioItems);
-
-    } catch (error) {
-        console.log('Mantendo galeria de exemplo');
-    }
-}
-
-// Carrega dados da página sobre
-async function loadAboutData() {
-    try {
-        const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/_data/sobre.yml`);
-        if (response.ok) {
-            const content = await response.text();
-            const aboutData = parseYAML(content);
-
-            if (aboutData.title) {
-                document.querySelector('.about-text h2').textContent = aboutData.title;
-            }
-
-            if (aboutData.profile_image) {
-                document.querySelector('.about-image img').src = aboutData.profile_image;
-            }
-
-            if (aboutData.description) {
-                // Converte markdown para HTML simples
-                const htmlContent = aboutData.description
-                    .split('\n\n')
-                    .map(paragraph => `<p>${paragraph}</p>`)
-                    .join('');
-                document.querySelector('.about-text').innerHTML =
-                    `<h2>${aboutData.title || 'Sobre Mim'}</h2>${htmlContent}`;
-            }
-        }
-    } catch (error) {
-        console.log('Dados sobre padrão mantidos');
-    }
-}
-
-// Carrega dados de contato
-async function loadContactData() {
-    try {
-        const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/_data/contato.yml`);
-        if (response.ok) {
-            const content = await response.text();
-            const contactData = parseYAML(content);
-
-            // Atualiza WhatsApp
-            if (contactData.whatsapp) {
-                const whatsappLink = document.querySelector('.contact-item a[href*="wa.me"]');
-                if (whatsappLink) {
-                    whatsappLink.href = `https://wa.me/${contactData.whatsapp.replace(/\D/g, '')}`;
-                    whatsappLink.textContent = contactData.whatsapp;
-                }
-            }
-
-            // Atualiza Instagram
-            if (contactData.instagram) {
-                const instaLink = document.querySelector('.contact-item a[href*="instagram"]');
-                if (instaLink) {
-                    instaLink.href = `https://instagram.com/${contactData.instagram.replace('@', '')}`;
-                    instaLink.textContent = contactData.instagram;
-                }
-            }
-
-            // Atualiza Email
-            if (contactData.email) {
-                const emailLink = document.querySelector('.contact-item a[href*="mailto"]');
-                if (emailLink) {
-                    emailLink.href = `mailto:${contactData.email}`;
-                    emailLink.textContent = contactData.email;
-                }
-            }
-        }
-    } catch (error) {
-        console.log('Dados contato padrão mantidos');
-    }
-}
-
-// Atualiza a grade de galerias
-function updateGalleryGrid(portfolioItems) {
-    const galleryGrid = document.querySelector('.gallery-grid');
-
-    if (portfolioItems.length === 0) return;
-
-    // Limpa galeria existente
-    galleryGrid.innerHTML = '';
-
-    // Cria itens da galeria
-    portfolioItems.forEach(item => {
-        const galleryItem = document.createElement('div');
-        galleryItem.className = 'gallery-item';
-
-        const featuredImage = item.featured_image || (item.gallery && item.gallery[0]) || '';
-
-        galleryItem.innerHTML = `
-                    <img src="${featuredImage}" alt="${item.title}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 400 250\\'><rect fill=\\'%23f0f0f0\\' width=\\'400\\' height=\\'250\\'/><text x=\\'200\\' y=\\'125\\' font-family=\\'Arial\\' font-size=\\'14\\' fill=\\'%23999\\' text-anchor=\\'middle\\'>Foto do Portfólio</text></svg>'">
-                    <div class="gallery-info">
-                        <h3>${item.title}</h3>
-                        <p>${item.description || 'Clique para ver a galeria completa'}</p>
-                        <span class="category-tag">${item.category}</span>
-                    </div>
-                `;
-
-        // Adiciona click para ver galeria completa
-        galleryItem.addEventListener('click', () => {
-            openGalleryModal(item);
-        });
-
-        galleryGrid.appendChild(galleryItem);
-    });
-}
+// ========================================
+// GEOVANA FOTOGRAFIAS - Jekyll Version
+// Muito mais simples e rápido! 🚀
+// ========================================
 
 // Modal para ver galeria completa
-function openGalleryModal(item) {
-    // Remove modal existente
+function openGalleryModal(title, gallery) {
+    // Remove modal existente se houver
     const existingModal = document.getElementById('gallery-modal');
     if (existingModal) existingModal.remove();
 
-    // Cria modal
+    // Cria o modal
     const modal = document.createElement('div');
     modal.id = 'gallery-modal';
     modal.innerHTML = `
-                <div class="modal-overlay" onclick="closeGalleryModal()">
-                    <div class="modal-content" onclick="event.stopPropagation()">
-                        <div class="modal-header">
-                            <h2>${item.title}</h2>
-                            <button onclick="closeGalleryModal()" class="close-btn">&times;</button>
-                        </div>
-                        <div class="modal-gallery">
-                            ${item.gallery ? item.gallery.map(img => `
-                                <img src="${img}" alt="${item.title}" loading="lazy">
-                            `).join('') : '<p>Nenhuma imagem disponível</p>'}
-                        </div>
-                    </div>
+        <div class="modal-overlay" onclick="closeGalleryModal()">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>${title}</h2>
+                    <button onclick="closeGalleryModal()" class="close-btn">&times;</button>
                 </div>
-            `;
+                <div class="modal-gallery">
+                    ${gallery && gallery.length > 0 ? 
+                        gallery.map(img => `
+                            <img src="${img}" alt="${title}" loading="lazy" onclick="viewFullImage('${img}')">
+                        `).join('') : 
+                        '<p>Nenhuma imagem disponível</p>'
+                    }
+                </div>
+            </div>
+        </div>
+    `;
 
-    // Adiciona estilos do modal
+    // Adiciona estilos do modal (só uma vez)
     if (!document.getElementById('modal-styles')) {
         const style = document.createElement('style');
         style.id = 'modal-styles';
         style.textContent = `
-                    #gallery-modal {
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        z-index: 1000;
-                    }
-                    
-                    .modal-overlay {
-                        background: rgba(0,0,0,0.9);
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        padding: 20px;
-                    }
-                    
-                    .modal-content {
-                        background: white;
-                        border-radius: 10px;
-                        max-width: 90vw;
-                        max-height: 90vh;
-                        overflow: hidden;
-                        display: flex;
-                        flex-direction: column;
-                    }
-                    
-                    .modal-header {
-                        padding: 20px;
-                        border-bottom: 1px solid #eee;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                    }
-                    
-                    .close-btn {
-                        background: none;
-                        border: none;
-                        font-size: 30px;
-                        cursor: pointer;
-                        color: var(--text-light);
-                    }
-                    
-                    .modal-gallery {
-                        padding: 20px;
-                        max-height: 70vh;
-                        overflow-y: auto;
-                        display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                        gap: 15px;
-                    }
-                    
-                    .modal-gallery img {
-                        width: 100%;
-                        height: 200px;
-                        object-fit: cover;
-                        border-radius: 8px;
-                        cursor: pointer;
-                        transition: transform 0.3s ease;
-                    }
-                    
-                    .modal-gallery img:hover {
-                        transform: scale(1.05);
-                    }
-                `;
+            #gallery-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            .modal-overlay {
+                background: rgba(0,0,0,0.9);
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                backdrop-filter: blur(5px);
+            }
+            
+            .modal-content {
+                background: white;
+                border-radius: 15px;
+                max-width: 95vw;
+                max-height: 95vh;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                animation: slideUp 0.3s ease;
+            }
+            
+            @keyframes slideUp {
+                from { 
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to { 
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .modal-header {
+                padding: 25px;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: linear-gradient(135deg, var(--gold), var(--light-gold));
+                color: white;
+            }
+            
+            .modal-header h2 {
+                margin: 0;
+                font-size: 1.8rem;
+            }
+            
+            .close-btn {
+                background: none;
+                border: none;
+                font-size: 35px;
+                cursor: pointer;
+                color: white;
+                padding: 0;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                transition: background-color 0.3s ease;
+            }
+            
+            .close-btn:hover {
+                background: rgba(255,255,255,0.2);
+            }
+            
+            .modal-gallery {
+                padding: 25px;
+                max-height: 75vh;
+                overflow-y: auto;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .modal-gallery img {
+                width: 100%;
+                height: 250px;
+                object-fit: cover;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            
+            .modal-gallery img:hover {
+                transform: scale(1.03);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            }
+            
+            /* Responsive */
+            @media (max-width: 768px) {
+                .modal-content {
+                    max-width: 98vw;
+                    max-height: 98vh;
+                    margin: 10px;
+                }
+                
+                .modal-gallery {
+                    grid-template-columns: 1fr;
+                    padding: 20px;
+                    gap: 15px;
+                }
+                
+                .modal-gallery img {
+                    height: 200px;
+                }
+                
+                .modal-header {
+                    padding: 20px;
+                }
+                
+                .modal-header h2 {
+                    font-size: 1.5rem;
+                }
+            }
+        `;
         document.head.appendChild(style);
     }
 
+    // Adiciona o modal ao body
     document.body.appendChild(modal);
+    
+    // Impede scroll da página
+    document.body.style.overflow = 'hidden';
 }
 
-// Fecha modal da galeria
+// Fecha o modal da galeria
 function closeGalleryModal() {
     const modal = document.getElementById('gallery-modal');
-    if (modal) modal.remove();
-}
-
-// Parser YAML simples
-function parseYAML(content) {
-    const lines = content.split('\n');
-    const result = {};
-
-    for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed && !trimmed.startsWith('#')) {
-            const [key, ...valueParts] = trimmed.split(':');
-            if (key && valueParts.length > 0) {
-                const value = valueParts.join(':').trim().replace(/^["']|["']$/g, '');
-                result[key.trim()] = value;
-            }
-        }
+    if (modal) {
+        modal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            modal.remove();
+            document.body.style.overflow = 'auto';
+        }, 300);
     }
-
-    return result;
 }
 
-// Parser Markdown com frontmatter
-function parseMarkdownWithFrontmatter(content) {
-    const parts = content.split('---');
-
-    if (parts.length < 3) return { title: 'Sem título', content: content };
-
-    const frontmatter = parseYAML(parts[1]);
-    const body = parts.slice(2).join('---').trim();
-
-    // Parse da galeria (lista de URLs)
-    if (frontmatter.gallery) {
-        try {
-            // Se for uma string, tenta fazer parse como array
-            if (typeof frontmatter.gallery === 'string') {
-                frontmatter.gallery = frontmatter.gallery
-                    .split('\n')
-                    .map(line => line.trim().replace(/^- /, ''))
-                    .filter(line => line && line.startsWith('http'));
+// Visualiza imagem em tela cheia
+function viewFullImage(imageSrc) {
+    const fullImageModal = document.createElement('div');
+    fullImageModal.id = 'full-image-modal';
+    fullImageModal.innerHTML = `
+        <div class="full-image-overlay" onclick="closeFullImage()">
+            <img src="${imageSrc}" alt="Imagem em tela cheia" onclick="event.stopPropagation()">
+            <button onclick="closeFullImage()" class="full-image-close">&times;</button>
+        </div>
+    `;
+    
+    // Estilos para visualização em tela cheia
+    if (!document.getElementById('full-image-styles')) {
+        const style = document.createElement('style');
+        style.id = 'full-image-styles';
+        style.textContent = `
+            #full-image-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 2000;
+                animation: fadeIn 0.3s ease;
             }
-        } catch (e) {
-            frontmatter.gallery = [];
-        }
+            
+            .full-image-overlay {
+                background: rgba(0,0,0,0.95);
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            
+            .full-image-overlay img {
+                max-width: 95%;
+                max-height: 95%;
+                object-fit: contain;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            }
+            
+            .full-image-close {
+                position: absolute;
+                top: 30px;
+                right: 30px;
+                background: rgba(255,255,255,0.2);
+                border: none;
+                color: white;
+                font-size: 40px;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            
+            .full-image-close:hover {
+                background: rgba(255,255,255,0.3);
+            }
+        `;
+        document.head.appendChild(style);
     }
-
-    return { ...frontmatter, body };
+    
+    document.body.appendChild(fullImageModal);
 }
 
-// Smooth scrolling para os links do menu
-document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+// Fecha visualização em tela cheia
+function closeFullImage() {
+    const fullImageModal = document.getElementById('full-image-modal');
+    if (fullImageModal) fullImageModal.remove();
+}
+
+// Smooth scrolling para navegação
+function initSmoothScrolling() {
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Destaca menu ativo conforme scroll
+function initActiveMenuHighlight() {
+    window.addEventListener('scroll', () => {
+        let current = '';
+        const sections = document.querySelectorAll('section[id]');
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (scrollY >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        document.querySelectorAll('nav a').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    });
+}
+
+// Adiciona animações suaves aos elementos quando aparecem na tela
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observa elementos da galeria
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(item);
+    });
+}
+
+// Event listeners globais
+function initEventListeners() {
+    // Tecla ESC fecha modais
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeFullImage();
+            closeGalleryModal();
         }
     });
-});
 
-// Highlight do menu ativo
-window.addEventListener('scroll', () => {
-    let current = '';
-    const sections = document.querySelectorAll('section[id]');
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (scrollY >= (sectionTop - 200)) {
-            current = section.getAttribute('id');
+    // Impede zoom no mobile ao dar double tap
+    document.addEventListener('touchend', (e) => {
+        const now = new Date().getTime();
+        const timeSince = now - lastTouchEnd;
+        if (timeSince < 300 && timeSince > 0) {
+            e.preventDefault();
         }
+        lastTouchEnd = now;
     });
+}
 
-    document.querySelectorAll('nav a').forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-});
+// Variável para controle de double tap
+let lastTouchEnd = 0;
 
-// Carrega dados quando a página carrega
-document.addEventListener('DOMContentLoaded', loadPortfolioData);
-
-// Adiciona suporte para tecla ESC no modal
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeGalleryModal();
+// Inicializa tudo quando a página carrega
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎉 Geovana Fotografias - Jekyll version carregada!');
+    
+    initSmoothScrolling();
+    initActiveMenuHighlight();
+    initScrollAnimations();
+    initEventListeners();
+    
+    // Adiciona classe CSS para animações
+    if (!document.getElementById('animation-styles')) {
+        const style = document.createElement('style');
+        style.id = 'animation-styles';
+        style.textContent = `
+            nav a.active {
+                color: var(--gold) !important;
+                transform: translateY(-2px);
+            }
+            
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            
+            /* Melhoria visual nos botões de contato */
+            .contact-item {
+                transition: transform 0.3s ease;
+            }
+            
+            .contact-item:hover {
+                transform: translateY(-5px);
+            }
+        `;
+        document.head.appendChild(style);
     }
 });

@@ -1,15 +1,20 @@
 backend:
   name: git-gateway
-  branch: main # Mude para 'master' se seu repo usar master
+  branch: main
 
 media_library:
   name: cloudinary
   config:
-    cloud_name: dptcrhlzf # Substitua pelo seu cloud name do Cloudinary
+    cloud_name: dptcrhlzf
     api_key: 629167333274617
 
-public_folder: "/images/uploads"
-media_folder: "images/uploads"
+# Paths otimizados para Jekyll
+public_folder: "/assets/uploads"
+media_folder: "assets/uploads"
+
+# Preview do site
+site_url: https://geovanafotografias.netlify.app
+display_url: https://geovanafotografias.netlify.app
 
 collections:
   - name: "portfolio"
@@ -17,42 +22,78 @@ collections:
     folder: "_portfolio"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: "portfolio/{{slug}}"
     fields:
       - {label: "Título", name: "title", widget: "string"}
-      - {label: "Data de Publicação", name: "date", widget: "datetime"}
-      - {label: "Categoria", name: "category", widget: "select", options: ["Casamento", "Ensaio", "Família", "Gestante", "Newborn", "Formatura"]}
-      - {label: "Descrição Curta", name: "description", widget: "text"}
-      - {label: "Imagem Destaque", name: "featured_image", widget: "image"}
-      - {label: "Galeria de Fotos", name: "gallery", widget: "list", field: {label: "Foto", name: "image", widget: "image"}}
-      - {label: "Corpo do Texto", name: "body", widget: "markdown", required: false}
-      - {label: "Mostrar no Destaque?", name: "featured", widget: "boolean", default: false}
+      - {label: "Data de Publicação", name: "date", widget: "datetime", default: "{{now}}"}
+      - {label: "Categoria", name: "category", widget: "select", options: ["Casamento", "Ensaio", "Família", "Gestante", "Newborn", "Formatura", "Corporativo"]}
+      - {label: "Descrição Curta", name: "description", widget: "text", pattern: [".{10,200}", "Descrição deve ter entre 10 e 200 caracteres"]}
+      - {label: "Imagem Destaque", name: "featured_image", widget: "image", required: true}
+      - {label: "Galeria de Fotos", name: "gallery", widget: "list", field: {label: "Foto", name: "image", widget: "image"}, min: 1, max: 50}
+      - {label: "História do Ensaio", name: "body", widget: "markdown", required: false, hint: "Conte a história por trás deste ensaio (opcional)"}
+      - {label: "Mostrar no Destaque?", name: "featured", widget: "boolean", default: false, hint: "Aparecerá na home page"}
+      - {label: "Tags", name: "tags", widget: "list", required: false, hint: "Ex: ao-ar-livre, igreja, praia"}
 
-  - name: "pages"
-    label: "Páginas"
+  - name: "config"
+    label: "Configurações do Site"
     files:
-      - file: "_data/sobre.yml"
+      - file: "_data/site.yml"
+        label: "Informações Gerais"
+        name: "site_config"
+        fields:
+          - {label: "Nome do Studio", name: "title", widget: "string", default: "Geovana Fotografias"}
+          - {label: "Slogan", name: "tagline", widget: "string", default: "Studio Fotográfico"}
+          - {label: "Descrição do Site", name: "description", widget: "text", default: "Capturando momentos únicos através da fotografia"}
+          - {label: "Foto Hero (Página Inicial)", name: "hero_image", widget: "image"}
+          - {label: "Texto Hero Principal", name: "hero_title", widget: "string", default: "Capturando Momentos Únicos"}
+          - {label: "Texto Hero Secundário", name: "hero_subtitle", widget: "text", default: "Transformo seus momentos especiais em memórias eternas"}
+          - {label: "Logo (opcional)", name: "logo", widget: "image", required: false}
+
+      - file: "_data/about.yml"
         label: "Página Sobre"
-        name: "sobre"
+        name: "about"
         fields:
-          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Título da Seção", name: "title", widget: "string", default: "Sobre Mim"}
           - {label: "Foto de Perfil", name: "profile_image", widget: "image"}
-          - {label: "Descrição", name: "description", widget: "markdown"}
-          
-      - file: "_data/contato.yml"
+          - {label: "Descrição Principal", name: "intro", widget: "markdown", hint: "Primeira parte da sua apresentação"}
+          - {label: "Especialidades", name: "specialties", widget: "markdown", hint: "O que você faz de melhor"}
+          - {label: "Filosofia", name: "philosophy", widget: "markdown", hint: "Sua abordagem e estilo"}
+          - {label: "Experiência (anos)", name: "experience", widget: "number", required: false}
+          - {label: "Localização", name: "location", widget: "string", required: false}
+
+      - file: "_data/contact.yml"
         label: "Informações de Contato"
-        name: "contato"
+        name: "contact"
         fields:
-          - {label: "WhatsApp", name: "whatsapp", widget: "string"}
-          - {label: "Instagram", name: "instagram", widget: "string"}
+          - {label: "WhatsApp", name: "whatsapp", widget: "string", hint: "Ex: 5511999999999 (com código do país)"}
+          - {label: "Instagram", name: "instagram", widget: "string", hint: "Ex: @geovanafotografias (com @)"}
           - {label: "E-mail", name: "email", widget: "string"}
           - {label: "Endereço (opcional)", name: "address", widget: "text", required: false}
+          - {label: "Horário de Atendimento", name: "hours", widget: "string", required: false, hint: "Ex: Seg-Sex 9h às 18h"}
+          - {label: "Cidade/Estado", name: "city", widget: "string", required: false}
 
-      - file: "_data/config.yml"
-        label: "Configurações Gerais"
-        name: "config"
+      - file: "_data/social.yml"
+        label: "Redes Sociais"
+        name: "social"
         fields:
-          - {label: "Nome do Studio", name: "site_title", widget: "string"}
-          - {label: "Slogan", name: "tagline", widget: "string"}
-          - {label: "Foto Hero (Página Inicial)", name: "hero_image", widget: "image"}
-          - {label: "Texto Hero", name: "hero_text", widget: "text"}
-          - {label: "Meta Descrição", name: "meta_description", widget: "text"}
+          - {label: "Facebook", name: "facebook", widget: "string", required: false}
+          - {label: "Instagram", name: "instagram", widget: "string", required: false}
+          - {label: "TikTok", name: "tiktok", widget: "string", required: false}
+          - {label: "YouTube", name: "youtube", widget: "string", required: false}
+          - {label: "Pinterest", name: "pinterest", widget: "string", required: false}
+
+  - name: "pages"
+    label: "Páginas Extras"
+    folder: "_pages"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Link no Menu", name: "menu_title", widget: "string", required: false, hint: "Se diferente do título"}
+      - {label: "Ordem no Menu", name: "menu_order", widget: "number", required: false}
+      - {label: "Conteúdo", name: "body", widget: "markdown"}
+      - {label: "Mostrar no Menu?", name: "show_in_menu", widget: "boolean", default: false}
+
+# Editor settings
+editor:
+  preview: true

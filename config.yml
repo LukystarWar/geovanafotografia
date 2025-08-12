@@ -1,0 +1,38 @@
+# Configuração do site Jekyll
+title: "Geovana Fotografias"
+description: "Studio Fotográfico - Capturando momentos únicos"
+baseurl: ""
+url: "https://geovanafotografias.netlify.app"
+
+# Collections
+collections:
+  portfolio:
+    output: true
+    permalink: /:collection/:name/
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+sass:
+  sass_dir: assets/css
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Excludes
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "portfolio"
+    values:
+      layout: "portfolio"
