@@ -5,7 +5,7 @@ backend:
 media_library:
   name: cloudinary
   config:
-    cloud_name: root # Substitua pelo seu cloud name do Cloudinary
+    cloud_name: dptcrhlzf # Substitua pelo seu cloud name do Cloudinary
     api_key: 629167333274617
 
 public_folder: "/images/uploads"
