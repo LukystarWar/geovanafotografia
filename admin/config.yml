@@ -5,8 +5,8 @@ backend:
 media_library:
   name: cloudinary
   config:
-    cloud_name: your-cloud-name # Substitua pelo seu cloud name do Cloudinary
-    api_key: your-api-key
+    cloud_name: lucas # Substitua pelo seu cloud name do Cloudinary
+    api_key: 629167333274617
 
 public_folder: "/images/uploads"
 media_folder: "images/uploads"
