@@ -14,6 +14,12 @@ git remote add origin https://github.com/SEU-USUARIO/geovana-portfolio
 git push -u origin main
 ```
 
+**⚠️ IMPORTANTE:** No arquivo `index.html`, procure e mude estas linhas:
+```javascript
+const GITHUB_USER = 'SEU-USUARIO'; // ← Seu usuário do GitHub
+const GITHUB_REPO = 'geovana-portfolio'; // ← Nome do repositório
+```
+
 ### 2. **Deploy no Netlify**
 1. Acesse [netlify.com](https://netlify.com) e faça login
 2. Clique em "New site from Git"
@@ -98,7 +104,26 @@ No `admin/config.yml`, linha da categoria, adicione:
 options: ["Casamento", "Ensaio", "Família", "Gestante", "Newborn", "Formatura", "NOVA_CATEGORIA"]
 ```
 
-## ⚡ Recursos Inclusos
+## 🎯 **Como Funciona Agora**
+
+### **Fluxo Automático:**
+1. **Geovana publica** no `/admin`
+2. **CMS salva** os dados no GitHub
+3. **JavaScript carrega** automaticamente os dados
+4. **Site atualiza** em tempo real
+
+### **O que é carregado automaticamente:**
+- ✅ **Galerias do portfólio** - Todas as fotos que ela subir
+- ✅ **Informações pessoais** - Foto e texto da página "Sobre"  
+- ✅ **Dados de contato** - WhatsApp, Instagram, email
+- ✅ **Configurações gerais** - Logo, slogan, foto da home
+- ✅ **Modal de galeria** - Clique em qualquer foto para ver todas
+
+### **Recursos Extras Adicionados:**
+- 🖼️ **Modal de galeria completa** - Clique nas fotos para ver todas
+- 📱 **Totalmente responsivo** - Funciona perfeitamente no mobile
+- ⚡ **Carregamento inteligente** - Usa dados padrão se CMS não configurado
+- 🔄 **Atualização automática** - Zero manutenção necessária
 
 - ✅ **Totalmente responsivo** (mobile, tablet, desktop)
 - ✅ **Carregamento rápido** com Cloudinary
