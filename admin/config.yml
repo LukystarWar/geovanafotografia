@@ -1,0 +1,58 @@
+backend:
+  name: git-gateway
+  branch: main # Mude para 'master' se seu repo usar master
+
+media_library:
+  name: cloudinary
+  config:
+    cloud_name: your-cloud-name # Substitua pelo seu cloud name do Cloudinary
+    api_key: your-api-key
+
+public_folder: "/images/uploads"
+media_folder: "images/uploads"
+
+collections:
+  - name: "portfolio"
+    label: "Portfólio"
+    folder: "_portfolio"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Data de Publicação", name: "date", widget: "datetime"}
+      - {label: "Categoria", name: "category", widget: "select", options: ["Casamento", "Ensaio", "Família", "Gestante", "Newborn", "Formatura"]}
+      - {label: "Descrição Curta", name: "description", widget: "text"}
+      - {label: "Imagem Destaque", name: "featured_image", widget: "image"}
+      - {label: "Galeria de Fotos", name: "gallery", widget: "list", field: {label: "Foto", name: "image", widget: "image"}}
+      - {label: "Corpo do Texto", name: "body", widget: "markdown", required: false}
+      - {label: "Mostrar no Destaque?", name: "featured", widget: "boolean", default: false}
+
+  - name: "pages"
+    label: "Páginas"
+    files:
+      - file: "_data/sobre.yml"
+        label: "Página Sobre"
+        name: "sobre"
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Foto de Perfil", name: "profile_image", widget: "image"}
+          - {label: "Descrição", name: "description", widget: "markdown"}
+          
+      - file: "_data/contato.yml"
+        label: "Informações de Contato"
+        name: "contato"
+        fields:
+          - {label: "WhatsApp", name: "whatsapp", widget: "string"}
+          - {label: "Instagram", name: "instagram", widget: "string"}
+          - {label: "E-mail", name: "email", widget: "string"}
+          - {label: "Endereço (opcional)", name: "address", widget: "text", required: false}
+
+      - file: "_data/config.yml"
+        label: "Configurações Gerais"
+        name: "config"
+        fields:
+          - {label: "Nome do Studio", name: "site_title", widget: "string"}
+          - {label: "Slogan", name: "tagline", widget: "string"}
+          - {label: "Foto Hero (Página Inicial)", name: "hero_image", widget: "image"}
+          - {label: "Texto Hero", name: "hero_text", widget: "text"}
+          - {label: "Meta Descrição", name: "meta_description", widget: "text"}
