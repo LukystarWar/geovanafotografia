@@ -47,8 +47,9 @@ description: "Studio Fotográfico - Capturando momentos únicos"
         </div>
         
         <div class="gallery-grid">
-            {% assign sorted_portfolio = site.portfolio | sort: 'date' | reverse %}
-            {% for item in sorted_portfolio %}
+            {% if site.portfolio and site.portfolio.size > 0 %}
+                {% assign sorted_portfolio = site.portfolio | sort: 'date' | reverse %}
+                {% for item in sorted_portfolio %}
             <div class="gallery-item" onclick="openGalleryModal('{{ item.title | escape }}', {{ item.gallery | jsonify }})">
                 <img src="{{ item.featured_image }}" alt="{{ item.title }}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 250\'><rect fill=\'%23f0f0f0\' width=\'400\' height=\'250\'/><text x=\'200\' y=\'125\' font-family=\'Arial\' font-size=\'14\' fill=\'%23999\' text-anchor=\'middle\'>Foto do Portfólio</text></svg>'">
                 <div class="gallery-info">
@@ -58,8 +59,7 @@ description: "Studio Fotográfico - Capturando momentos únicos"
                 </div>
             </div>
             {% endfor %}
-            
-            {% if site.portfolio.size == 0 %}
+            {% else %}
             <!-- Galeria de exemplo quando não há itens -->
             <div class="gallery-item">
                 <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'><rect fill='%23f0f0f0' width='400' height='250'/><text x='200' y='125' font-family='Arial' font-size='14' fill='%23999' text-anchor='middle'>Foto do Portfólio</text></svg>" alt="Casamento">
