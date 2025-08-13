@@ -14,7 +14,7 @@
         }
 
         body {
-            font-family: 'Georgia', serif;
+            font-family: Arial, Helvetica, sans-serif;
             line-height: 1.6;
             color: var(--text-dark);
             background-color: white;
@@ -191,6 +191,7 @@
             grid-template-columns: 1fr 2fr;
             gap: 3rem;
             align-items: center;
+            text-align: justify;
         }
 
         .about-image {
