@@ -7,6 +7,7 @@ media_library:
   config:
     cloud_name: dptcrhlzf
     api_key: 629167333274617
+    api_secret: 0CBPcsuEPp9H6tFEpD9IpATMEZc
 
 # Paths otimizados para Jekyll
 public_folder: "/assets/uploads"
