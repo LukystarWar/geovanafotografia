@@ -116,9 +116,9 @@ description: "Studio Fotográfico - Capturando momentos únicos"
                         <p>Especializo-me em casamentos, ensaios e fotografias de família, sempre buscando a naturalidade e a beleza única de cada momento.</p>
                         <p>Meu objetivo é criar um ambiente confortável onde você possa ser autêntico, permitindo que eu capture sua verdadeira essência.</p>
                     {% endunless %}
-                    {% if site.data.about.experience %}
+                    <!-- {% if site.data.about.experience %}
                         <p><strong>{{ site.data.about.experience }} anos de experiência</strong> capturando momentos únicos.</p>
-                    {% endif %}
+                    {% endif %} -->
                     {% if site.data.about.location %}
                         <p><strong>Localização:</strong> {{ site.data.about.location }}</p>
                     {% endif %}

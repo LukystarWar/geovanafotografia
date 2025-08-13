@@ -59,7 +59,7 @@ collections:
           - {label: "Descrição Principal", name: "intro", widget: "markdown", hint: "Primeira parte da sua apresentação"}
           - {label: "Especialidades", name: "specialties", widget: "markdown", hint: "O que você faz de melhor", required: false}
           - {label: "Filosofia", name: "philosophy", widget: "markdown", hint: "Sua abordagem e estilo", required: false}
-          - {label: "Experiência (anos)", name: "experience", widget: "number", required: false}
+          # - {label: "Experiência (anos)", name: "experience", widget: "number", required: false}
           - {label: "Localização", name: "location", widget: "string", required: false}
 
       - file: "_data/contact.yml"
