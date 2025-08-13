@@ -57,8 +57,8 @@ collections:
           - {label: "Título da Seção", name: "title", widget: "string", default: "Sobre Mim"}
           - {label: "Foto de Perfil", name: "profile_image", widget: "image"}
           - {label: "Descrição Principal", name: "intro", widget: "markdown", hint: "Primeira parte da sua apresentação"}
-          - {label: "Especialidades", name: "specialties", widget: "markdown", hint: "O que você faz de melhor"}
-          - {label: "Filosofia", name: "philosophy", widget: "markdown", hint: "Sua abordagem e estilo"}
+          - {label: "Especialidades", name: "specialties", widget: "markdown", hint: "O que você faz de melhor", required: false}
+          - {label: "Filosofia", name: "philosophy", widget: "markdown", hint: "Sua abordagem e estilo", required: false}
           - {label: "Experiência (anos)", name: "experience", widget: "number", required: false}
           - {label: "Localização", name: "location", widget: "string", required: false}
 
@@ -68,7 +68,7 @@ collections:
         fields:
           - {label: "WhatsApp", name: "whatsapp", widget: "string", hint: "Ex: 5511999999999 (com código do país)"}
           - {label: "Instagram", name: "instagram", widget: "string", hint: "Ex: @geovanafotografias (com @)"}
-          - {label: "E-mail", name: "email", widget: "string"}
+          - {label: "E-mail", name: "email", widget: "string", required: false}
           - {label: "Endereço (opcional)", name: "address", widget: "text", required: false}
           - {label: "Horário de Atendimento", name: "hours", widget: "string", required: false, hint: "Ex: Seg-Sex 9h às 18h"}
           - {label: "Cidade/Estado", name: "city", widget: "string", required: false}

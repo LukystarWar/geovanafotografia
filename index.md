@@ -102,32 +102,26 @@ description: "Studio Fotográfico - Capturando momentos únicos"
             </div>
             <div class="about-text">
                 <h2>{{ site.data.about.title | default: "Sobre Mim" }}</h2>
-                
-                {% if site.data.about.intro %}
-                    {{ site.data.about.intro | markdownify }}
-                {% endif %}
-                
-                {% if site.data.about.specialties %}
-                    {{ site.data.about.specialties | markdownify }}
-                {% endif %}
-                
-                {% if site.data.about.philosophy %}
-                    {{ site.data.about.philosophy | markdownify }}
-                {% endif %}
-                
-                {% unless site.data.about.intro or site.data.about.specialties or site.data.about.philosophy %}
-                    <p>Sou Geovana, fotógrafa apaixonada por capturar a essência dos momentos mais especiais da vida. Com anos de experiência, transformo emoções em imagens que contam histórias.</p>
-                    <p>Especializo-me em casamentos, ensaios e fotografias de família, sempre buscando a naturalidade e a beleza única de cada momento.</p>
-                    <p>Meu objetivo é criar um ambiente confortável onde você possa ser autêntico, permitindo que eu capture sua verdadeira essência.</p>
-                {% endunless %}
-                
-                {% if site.data.about.experience %}
-                    <p><strong>{{ site.data.about.experience }} anos de experiência</strong> capturando momentos únicos.</p>
-                {% endif %}
-                
-                {% if site.data.about.location %}
-                    <p><strong>Localização:</strong> {{ site.data.about.location }}</p>
-                {% endif %}
+                    {% if site.data.about.intro %}
+                        {{ site.data.about.intro | markdownify }}
+                    {% endif %}
+                    {% if site.data.about.specialties %}
+                        {{ site.data.about.specialties | markdownify }}
+                    {% endif %}
+                    {% if site.data.about.philosophy %}
+                        {{ site.data.about.philosophy | markdownify }}
+                    {% endif %}
+                    {% unless site.data.about.intro or site.data.about.specialties or site.data.about.philosophy %}
+                        <p>Sou Geovana, fotógrafa apaixonada por capturar a essência dos momentos mais especiais da vida. Com anos de experiência, transformo emoções em imagens que contam histórias.</p>
+                        <p>Especializo-me em casamentos, ensaios e fotografias de família, sempre buscando a naturalidade e a beleza única de cada momento.</p>
+                        <p>Meu objetivo é criar um ambiente confortável onde você possa ser autêntico, permitindo que eu capture sua verdadeira essência.</p>
+                    {% endunless %}
+                    {% if site.data.about.experience %}
+                        <p><strong>{{ site.data.about.experience }} anos de experiência</strong> capturando momentos únicos.</p>
+                    {% endif %}
+                    {% if site.data.about.location %}
+                        <p><strong>Localização:</strong> {{ site.data.about.location }}</p>
+                    {% endif %}
             </div>
         </div>
     </div>
@@ -140,7 +134,6 @@ description: "Studio Fotográfico - Capturando momentos únicos"
             <h2>Entre em Contato</h2>
             <p>Vamos conversar sobre seu próximo ensaio?</p>
         </div>
-        
         <div class="contact-info">
             <div class="contact-item">
                 <i class="fab fa-whatsapp"></i>
@@ -157,7 +150,6 @@ description: "Studio Fotográfico - Capturando momentos únicos"
                     <a href="https://wa.me/5511999999999" target="_blank">(11) 99999-9999</a>
                 {% endif %}
             </div>
-            
             <div class="contact-item">
                 <i class="fab fa-instagram"></i>
                 <h3>Instagram</h3>
@@ -166,8 +158,7 @@ description: "Studio Fotográfico - Capturando momentos únicos"
                 {% else %}
                     <a href="https://instagram.com/geovanafotografias" target="_blank">@geovanafotografias</a>
                 {% endif %}
-            </div>
-            
+            </div>  
             <div class="contact-item">
                 <i class="fas fa-envelope"></i>
                 <h3>E-mail</h3>
@@ -177,7 +168,6 @@ description: "Studio Fotográfico - Capturando momentos únicos"
                     <a href="mailto:contato@geovanafotografias.com">contato@geovanafotografias.com</a>
                 {% endif %}
             </div>
-            
             {% if site.data.contact.address %}
             <div class="contact-item">
                 <i class="fas fa-map-marker-alt"></i>
@@ -185,7 +175,6 @@ description: "Studio Fotográfico - Capturando momentos únicos"
                 <p>{{ site.data.contact.address }}</p>
             </div>
             {% endif %}
-            
             {% if site.data.contact.hours %}
             <div class="contact-item">
                 <i class="fas fa-clock"></i>
