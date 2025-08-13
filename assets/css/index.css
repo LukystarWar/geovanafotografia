@@ -284,6 +284,10 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .container	 {
+                text-align: center;
+            }
+
             .hero-content h2 {
                 font-size: 2rem;
             }
@@ -299,5 +303,10 @@
 
             .gallery-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .copy-info {
+                margin-top: 2rem;
+                font-size: 0.9rem;
             }
         }
