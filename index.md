@@ -44,21 +44,20 @@ description: "Studio Fotográfico - Capturando momentos únicos"
         <div class="section-title">
             <h2>Portfólio</h2>
             <p>Alguns dos meus trabalhos mais especiais</p>
-        </div>
-        
+        </div>  
         <div class="gallery-grid">
             {% if site.portfolio and site.portfolio.size > 0 %}
                 {% assign sorted_portfolio = site.portfolio | sort: 'date' | reverse %}
                 {% for item in sorted_portfolio %}
-            <div class="gallery-item" onclick="openGalleryModal('{{ item.title | escape }}', {{ item.gallery | jsonify }})">
-                <img src="{{ item.featured_image }}" alt="{{ item.title }}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 250\'><rect fill=\'%23f0f0f0\' width=\'400\' height=\'250\'/><text x=\'200\' y=\'125\' font-family=\'Arial\' font-size=\'14\' fill=\'%23999\' text-anchor=\'middle\'>Foto do Portfólio</text></svg>'">
-                <div class="gallery-info">
-                    <h3>{{ item.title }}</h3>
-                    <p>{{ item.description | default: "Clique para ver a galeria completa" }}</p>
-                    <span class="category-tag">{{ item.category }}</span>
+                <div class="gallery-item" data-title="{{ item.title | escape }}" data-gallery="{{ item.gallery | jsonify | escape }}">
+                    <img src="{{ item.featured_image }}" alt="{{ item.title }}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 250\'><rect fill=\'%23f0f0f0\' width=\'400\' height=\'250\'/><text x=\'200\' y=\'125\' font-family=\'Arial\' font-size=\'14\' fill=\'%23999\' text-anchor=\'middle\'>Foto do Portfólio</text></svg>'">
+                    <div class="gallery-info">
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.description | default: "Clique para ver a galeria completa" }}</p>
+                        <span class="category-tag">{{ item.category }}</span>
+                    </div>
                 </div>
-            </div>
-            {% endfor %}
+                {% endfor %}
             {% else %}
             <!-- Galeria de exemplo quando não há itens -->
             <div class="gallery-item">
@@ -69,7 +68,6 @@ description: "Studio Fotográfico - Capturando momentos únicos"
                     <span class="category-tag">Casamento</span>
                 </div>
             </div>
-
             <div class="gallery-item">
                 <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'><rect fill='%23f0f0f0' width='400' height='250'/><text x='200' y='125' font-family='Arial' font-size='14' fill='%23999' text-anchor='middle'>Foto do Portfólio</text></svg>" alt="Ensaio">
                 <div class="gallery-info">
@@ -78,7 +76,6 @@ description: "Studio Fotográfico - Capturando momentos únicos"
                     <span class="category-tag">Ensaio</span>
                 </div>
             </div>
-
             <div class="gallery-item">
                 <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'><rect fill='%23f0f0f0' width='400' height='250'/><text x='200' y='125' font-family='Arial' font-size='14' fill='%23999' text-anchor='middle'>Foto do Portfólio</text></svg>" alt="Família">
                 <div class="gallery-info">

@@ -20,12 +20,12 @@ function openGalleryModal(title, gallery) {
                     <button onclick="closeGalleryModal()" class="close-btn">&times;</button>
                 </div>
                 <div class="modal-gallery">
-                    ${gallery && gallery.length > 0 ? 
-                        gallery.map(img => `
+                    ${gallery && gallery.length > 0 ?
+            gallery.map(img => `
                             <img src="${img}" alt="${title}" loading="lazy" onclick="viewFullImage('${img}')">
-                        `).join('') : 
-                        '<p>Nenhuma imagem disponível</p>'
-                    }
+                        `).join('') :
+            '<p>Nenhuma imagem disponível</p>'
+        }
                 </div>
             </div>
         </div>
@@ -173,7 +173,7 @@ function openGalleryModal(title, gallery) {
 
     // Adiciona o modal ao body
     document.body.appendChild(modal);
-    
+
     // Impede scroll da página
     document.body.style.overflow = 'hidden';
 }
@@ -200,7 +200,7 @@ function viewFullImage(imageSrc) {
             <button onclick="closeFullImage()" class="full-image-close">&times;</button>
         </div>
     `;
-    
+
     // Estilos para visualização em tela cheia
     if (!document.getElementById('full-image-styles')) {
         const style = document.createElement('style');
@@ -255,7 +255,7 @@ function viewFullImage(imageSrc) {
         `;
         document.head.appendChild(style);
     }
-    
+
     document.body.appendChild(fullImageModal);
 }
 
@@ -286,7 +286,7 @@ function initActiveMenuHighlight() {
     window.addEventListener('scroll', () => {
         let current = '';
         const sections = document.querySelectorAll('section[id]');
-        
+
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
             if (scrollY >= (sectionTop - 200)) {
@@ -355,12 +355,12 @@ let lastTouchEnd = 0;
 // Inicializa tudo quando a página carrega
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🎉 Geovana Fotografias - Jekyll version carregada!');
-    
+
     initSmoothScrolling();
     initActiveMenuHighlight();
     initScrollAnimations();
     initEventListeners();
-    
+
     // Adiciona classe CSS para animações
     if (!document.getElementById('animation-styles')) {
         const style = document.createElement('style');
@@ -387,4 +387,13 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.head.appendChild(style);
     }
+
+    // Event listeners para galeria
+    document.querySelectorAll('.gallery-item[data-title]').forEach(item => {
+        item.addEventListener('click', () => {
+            const title = item.getAttribute('data-title');
+            const gallery = JSON.parse(item.getAttribute('data-gallery') || '[]');
+            openGalleryModal(title, gallery);
+        });
+    });
 });
