@@ -204,8 +204,10 @@ description: "Studio Fotográfico - Capturando momentos únicos"
             <a href="https://instagram.com/geovanafotografias" target="_blank"><i class="fab fa-instagram"></i></a>
             <a href="https://wa.me/5511999999999" target="_blank"><i class="fab fa-whatsapp"></i></a>
             <a href="mailto:contato@geovanafotografias.com"><i class="fas fa-envelope"></i></a>
-        </div class="copy-info">
-        <p>&copy; 2025 Geovana Fotografias. Todos os direitos reservados.</p>
-        <p>Desenvolvido por CastroLabs.com.br</p>
+        </div>
+        <div class="copy-info">
+            <p>&copy; 2025 Geovana Fotografias. Todos os direitos reservados.</p>
+            <p>Desenvolvido por <a href="https://castrolabs.com.br" target="_blank">Castro Labs</a></p>
+        </div>
     </div>
 </footer>
